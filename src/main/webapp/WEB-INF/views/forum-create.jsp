@@ -63,7 +63,5 @@
         crossorigin="anonymous"
 ></script>
 
-<img src="${pageContext.request.contextPath}/images/Bubbles_floating.svg" class="floating-bubble" />
-
 </body>
 </html>

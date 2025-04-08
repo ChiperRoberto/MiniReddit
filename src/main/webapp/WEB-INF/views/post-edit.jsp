@@ -84,7 +84,7 @@
 
         <hr/>
         <a href="${pageContext.request.contextPath}/forums/${forum.id}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Înapoi la bubble
+            <i class="bi bi-arrow-left"></i> Înapoi la Forum
         </a>
     </div>
 </div>
@@ -96,7 +96,6 @@
         crossorigin="anonymous"
 ></script>
 
-<img src="${pageContext.request.contextPath}/images/Bubbles_floating.svg" class="floating-bubble" />
 
 </body>
 </html>

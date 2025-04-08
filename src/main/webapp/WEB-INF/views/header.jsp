@@ -16,7 +16,7 @@
         .navbar {
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: sticky; top: 0; z-index: 1000;
-            background-image: url("${pageContext.request.contextPath}/images/holographic-background.png");
+            background-color: lightblue ;
             background-size: cover;
             background-position: center;
             border-radius: 0 0 2rem 2rem;

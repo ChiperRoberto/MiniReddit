@@ -1,6 +1,8 @@
 package pl.coderslab.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Optional;
 
@@ -13,9 +15,11 @@ public class User {
 
     // exemplu de nume de coloană, în general nu e obligatoriu dacă e identic cu atributul
     @Column(nullable = false)
+    @NotBlank
     private String username;
 
     @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
     @Column(nullable = false)
@@ -25,14 +29,18 @@ public class User {
     @Column
     private String details;
 
+    @Column
+    private String role;
+
     public User() {
     }
 
-    public User(String username, String email, String password, String details) {
+    public User(String username, String email, String password, String details, String role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.details = details;
+        this.role = role;
     }
 
     // Getters și Setters
@@ -76,5 +84,8 @@ public class User {
     public void setDetails(String details) {
         this.details = details;
     }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
 }

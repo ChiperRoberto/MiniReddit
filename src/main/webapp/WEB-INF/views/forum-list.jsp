@@ -36,25 +36,6 @@
 </head>
 <body>
 
-<div class="bubbles-background"></div>
-<style>
-    .bubbles-background {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: -1;
-        background: radial-gradient(circle at 20% 30%, rgba(173,216,230,0.3) 10px, transparent 11px),
-        radial-gradient(circle at 80% 70%, rgba(173,216,230,0.2) 8px,  transparent 9px),
-        radial-gradient(circle at 50% 50%, rgba(173,216,230,0.25) 12px, transparent 13px);
-        background-size: 100% 100%;
-        animation: bubbleMove 10s infinite linear;
-    }
-
-    @keyframes bubbleMove {
-        0%   { background-position: 0% 0%; }
-        100% { background-position: 0% 100%; }
-    }
-</style>
 
 <div class="container">
     <div class="bubble-card">
@@ -92,8 +73,6 @@
         </ul>
     </div>
 </div>
-
-<img src="${pageContext.request.contextPath}/images/Bubbles_floating.svg" class="floating-bubble" />
 
 <!-- Bootstrap JS -->
 <script

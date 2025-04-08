@@ -103,8 +103,6 @@
     </div>
 </div>
 
-<img src="${pageContext.request.contextPath}/images/Bubbles_floating.svg" class="floating-bubble" />
-
 <!-- Bootstrap JS -->
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
