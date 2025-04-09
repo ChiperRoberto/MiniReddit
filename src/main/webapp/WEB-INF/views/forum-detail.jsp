@@ -103,8 +103,35 @@
                         </form>
                     </div>
 
-                    <!-- Afișăm butoane Edit/Delete doar dacă autorul postării == user logat SAU user logat = admin -->
-                    <div class="mt-2">
+                    <!-- Comentarii -->
+                    <div class="mt-4 ms-3">
+                        <h6>Comentarii:</h6>
+
+                        <ul class="list-group mb-2">
+                            <c:forEach var="comment" items="${post.comments}">
+                                <li class="list-group-item">
+                                    <strong>${comment.author.username}</strong> a spus:
+                                    <p>${comment.content}</p>
+                                </li>
+                            </c:forEach>
+                            <c:if test="${empty post.comments}">
+                                <li class="list-group-item text-muted">Niciun comentariu.</li>
+                            </c:if>
+                        </ul>
+
+                        <!-- Formular comentariu nou -->
+                        <c:if test="${not empty sessionScope.currentUser}">
+                            <form action="${pageContext.request.contextPath}/posts/${post.id}/comments" method="post" class="d-flex align-items-start gap-2 mt-2">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <textarea name="content" class="form-control" rows="2" placeholder="Scrie un comentariu..." required></textarea>
+                                <button type="submit" class="btn btn-primary">Comentează</button>
+                            </form>
+                        </c:if>
+                    </div>
+
+
+                    <!-- Edit/Delete -->
+                    <div class="mt-3">
                         <c:if test="${post.author.id == sessionScope.currentUser.id
                                     or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
                             <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit"
@@ -130,7 +157,7 @@
         </div>
 
         <hr/>
-        <!-- Afișăm butoanele Edit / Delete forum doar dacă forum.author == user logat sau e Admin -->
+        <!-- Butoane Edit/Delete forum -->
         <div class="d-flex gap-2">
             <a href="${pageContext.request.contextPath}/forums"
                class="btn btn-outline-secondary">
