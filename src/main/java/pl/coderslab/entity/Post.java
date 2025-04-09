@@ -2,6 +2,7 @@ package pl.coderslab.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -32,6 +33,13 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "forum_id")
     private Forum forum;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Reaction> reactions;
+
+    public List<Reaction> getReactions() {
+        return reactions;
+    }
 
     public Post() {
     }

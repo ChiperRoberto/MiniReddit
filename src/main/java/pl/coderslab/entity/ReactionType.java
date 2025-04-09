@@ -2,5 +2,7 @@ package pl.coderslab.entity;
 
 public enum ReactionType {
     LIKE,
-    DISLIKE
+    DISLIKE,
+    SAD,
+    LOVE
 }

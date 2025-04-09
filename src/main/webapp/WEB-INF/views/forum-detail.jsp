@@ -60,6 +60,49 @@
                     <strong>${post.title}</strong><br/>
                     <c:out value="${post.content}" escapeXml="false" />
 
+                    <!-- Reacții -->
+                    <div class="mt-2">
+                        <strong>Reacții:</strong>
+
+                        <c:set var="likeCount" value="0" />
+                        <c:set var="loveCount" value="0" />
+                        <c:set var="sadCount" value="0" />
+
+                        <c:forEach var="reaction" items="${post.reactions}">
+                            <c:choose>
+                                <c:when test="${reaction.type == 'LIKE'}">
+                                    <c:set var="likeCount" value="${likeCount + 1}" />
+                                </c:when>
+                                <c:when test="${reaction.type == 'LOVE'}">
+                                    <c:set var="loveCount" value="${loveCount + 1}" />
+                                </c:when>
+                                <c:when test="${reaction.type == 'SAD'}">
+                                    <c:set var="sadCount" value="${sadCount + 1}" />
+                                </c:when>
+                            </c:choose>
+                        </c:forEach>
+
+                        <span class="me-2">👍 ${likeCount}</span>
+                        <span class="me-2">❤️ ${loveCount}</span>
+                        <span>😢 ${sadCount}</span>
+                    </div>
+
+                    <!-- Butoane de reacție -->
+                    <div class="mt-2">
+                        <form action="${pageContext.request.contextPath}/posts/${post.id}/react" method="post" class="d-inline">
+                            <input type="hidden" name="type" value="LIKE" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary me-1">👍</button>
+                        </form>
+                        <form action="${pageContext.request.contextPath}/posts/${post.id}/react" method="post" class="d-inline">
+                            <input type="hidden" name="type" value="LOVE" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger me-1">❤️</button>
+                        </form>
+                        <form action="${pageContext.request.contextPath}/posts/${post.id}/react" method="post" class="d-inline">
+                            <input type="hidden" name="type" value="SAD" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">😢</button>
+                        </form>
+                    </div>
+
                     <!-- Afișăm butoane Edit/Delete doar dacă autorul postării == user logat SAU user logat = admin -->
                     <div class="mt-2">
                         <c:if test="${post.author.id == sessionScope.currentUser.id
