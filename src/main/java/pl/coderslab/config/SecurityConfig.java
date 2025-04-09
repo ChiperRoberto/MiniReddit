@@ -55,9 +55,6 @@ public class SecurityConfig {
                         // Apoi orice alt request trebuie să fie autentificat
                         .anyRequest().authenticated()
                 )
-                // CSRF – opțional să-l dezactivezi (în general e bine să-l lași activ)
-                // .csrf(csrf -> csrf.disable())
-
                 .formLogin(form -> form
                         .loginPage("/login")      // definim pagina custom de login
                         .defaultSuccessUrl("/forums", true) // după login reușit
