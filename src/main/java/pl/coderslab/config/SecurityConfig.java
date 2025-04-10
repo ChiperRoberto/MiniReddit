@@ -66,7 +66,8 @@ public class SecurityConfig {
                                 "posts/*/react",
                                 "forums/*/edit",
                                 "forums/create",// <- corect acum
-                                "/forums/*/upload"
+                                "/forums/*/upload",
+                                "forums/*/posts/*/edit"
                         )
                 )
                 .formLogin(form -> form

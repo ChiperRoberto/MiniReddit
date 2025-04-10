@@ -77,7 +77,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
     <div class="container">
         <a class="navbar-brand fw-bold fs-4" href="${pageContext.request.contextPath}/forums">
-            Forumuri
+            MiniReddit
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto align-items-center">
