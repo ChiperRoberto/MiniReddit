@@ -57,7 +57,12 @@ public class SecurityConfig {
                         // Apoi orice alt request trebuie să fie autentificat
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/posts/*/comments/add-ajax",
+                                "/forums/*/posts/create"  // <- corect acum
+                        )
+                )
                 .formLogin(form -> form
                         .loginPage("/login")      // definim pagina custom de login
                         .successHandler(successHandler) // la login reușit, se apelează handler-ul

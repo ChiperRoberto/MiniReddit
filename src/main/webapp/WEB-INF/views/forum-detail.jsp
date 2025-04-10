@@ -4,7 +4,6 @@
 <html>
 <head>
     <title>Detalii Forum</title>
-    <p>session user = ${sessionScope.currentUser.id}, role=${sessionScope.currentUser.role}</p>
 
     <!-- Quill CSS + JS -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
@@ -13,7 +12,6 @@
     <!-- Bootstrap CSS + Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-          integrity="sha384-CTd3/yCOZhVVkTQ+nCyk3z9Hra6Hc6wWY6Xfq6wA91gz7zUmD2cBfyqegH6ckEdT"
           crossorigin="anonymous"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
@@ -112,6 +110,16 @@
                                 <li class="list-group-item">
                                     <strong>${comment.author.username}</strong> a spus:
                                     <p>${comment.content}</p>
+                                    <c:if test="${comment.author.id == sessionScope.currentUser.id or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
+                                        <form action="${pageContext.request.contextPath}/posts/${post.id}/comments/${comment.id}/edit" method="get" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning me-1">Editează</button>
+                                        </form>
+                                        <form action="${pageContext.request.contextPath}/posts/${post.id}/comments/${comment.id}/delete" method="post" class="d-inline"
+                                              onsubmit="return confirm('Ești sigur că vrei să ștergi acest comentariu?');">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Șterge</button>
+                                        </form>
+                                    </c:if>
                                 </li>
                             </c:forEach>
                             <c:if test="${empty post.comments}">
@@ -121,7 +129,9 @@
 
                         <!-- Formular comentariu nou -->
                         <c:if test="${not empty sessionScope.currentUser}">
-                            <form action="${pageContext.request.contextPath}/posts/${post.id}/comments" method="post" class="d-flex align-items-start gap-2 mt-2">
+                            <form class="d-flex align-items-start gap-2 mt-2"
+                                  action="${pageContext.request.contextPath}/posts/${post.id}/comments"
+                                  method="post">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <textarea name="content" class="form-control" rows="2" placeholder="Scrie un comentariu..." required></textarea>
                                 <button type="submit" class="btn btn-primary">Comentează</button>
@@ -129,13 +139,11 @@
                         </c:if>
                     </div>
 
-
                     <!-- Edit/Delete -->
                     <div class="mt-3">
                         <c:if test="${post.author.id == sessionScope.currentUser.id
                                     or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
-                            <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit"
-                               class="btn btn-sm btn-outline-warning me-2">
+                            <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit" class="btn btn-sm btn-outline-warning me-2">
                                 <i class="bi bi-pencil-square"></i> Edit Post
                             </a>
                             <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/delete"
@@ -150,10 +158,12 @@
         </ul>
 
         <div class="mt-3">
-            <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/create"
-               class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Adaugă o nouă postare
-            </a>
+            <form action="${pageContext.request.contextPath}/forums/${forum.id}/posts/create" method="get">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Adaugă o nouă postare
+                </button>
+            </form>
         </div>
 
         <hr/>
@@ -180,8 +190,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Ho1s9FlcwIyHfJO23mO4IECEq29gcNeLVU9wtBfKcvQf0yIfzBi6vM2kl1imU81u"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -22,4 +22,16 @@ public class CommentService {
     public List<Comment> getCommentsForPost(Post post) {
         return commentRepository.findByPost(post);
     }
+
+    public Comment getCommentById(Long id) {
+        return commentRepository.findById(id).orElse(null);
+    }
+
+    public void deleteComment(Long id) {
+        commentRepository.deleteById(id);
+    }
+
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElse(null);
+    }
 }
