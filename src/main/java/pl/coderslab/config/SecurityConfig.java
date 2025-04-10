@@ -64,7 +64,8 @@ public class SecurityConfig {
                                 "/user/update-description",
                                 "/logout",
                                 "posts/*/react",
-                                "forums/*/edit"// <- corect acum
+                                "forums/*/edit",
+                                "forums/create"// <- corect acum
                         )
                 )
                 .formLogin(form -> form
