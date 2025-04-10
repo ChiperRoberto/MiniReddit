@@ -1,55 +1,52 @@
 package pl.coderslab.controller;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.entity.Forum;
 import pl.coderslab.entity.User;
-import pl.coderslab.service.UserService;
+import pl.coderslab.repository.ForumRepository;
+import pl.coderslab.repository.UserRepository;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/users")
+@Controller
+@RequestMapping("/user")
 public class UserController {
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private final UserRepository userRepo;
+    private final ForumRepository forumRepo;
+
+    public UserController(UserRepository userRepo, ForumRepository forumRepo) {
+        this.userRepo = userRepo;
+        this.forumRepo = forumRepo;
     }
 
-//    // POST /users - creează user nou
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public User createUser() {
-////        User user = new User("roberto123", "email", "password", "details");
-////        return userService.createUser(user);
-//    }
-
-    // GET /users/{id} - ia user după ID
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if(user == null) {
-            throw new RuntimeException("User not found!");
-        }
-        return user;
+    @GetMapping("/profile")
+    public String profile(Model model, Authentication auth) {
+        User user = userRepo.findByUsername(auth.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("forums", forumRepo.findByAuthor(user));
+        return "user-profile";
     }
 
-    // GET /users - returnează lista completă de useri
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @PostMapping("/update-description")
+    public String updateDescription(@RequestParam String description, Authentication auth) {
+        User user = userRepo.findByUsername(auth.getName());
+        user.setDetails(description);
+        userRepo.save(user);
+        return "redirect:/user/profile";
     }
 
-    // PUT /users/{id} - actualizează user
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        updatedUser.setId(id);
-        return userService.updateUser(updatedUser);
+    @ModelAttribute("user")
+    public User getCurrentUser(Authentication auth) {
+        return userRepo.findByUsername(auth.getName());
     }
 
-    // DELETE /users/{id} - șterge user
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
+    @ModelAttribute("forums")
+    public List<Forum> getUserForums(Authentication auth) {
+        User user = userRepo.findByUsername(auth.getName());
+        return forumRepo.findByAuthor(user);
     }
 }

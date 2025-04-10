@@ -6,20 +6,16 @@
     <title>Detalii Forum</title>
 
     <!-- Quill CSS + JS -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    <!-- Bootstrap CSS -->
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-            integrity="sha384-CTd3/yCOZhVVkTQ+nCyk3z9Hra6Hc6wWY6Xfq6wA91gz7zUmD2cBfyqegH6ckEdT"
-            crossorigin="anonymous"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
+    <!-- Bootstrap CSS + Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+          crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
     <style>
         body {
             background-color: #eaf6ff;
@@ -48,66 +44,152 @@
         <h3>Postări în acest forum:</h3>
 
         <!-- Form de filtrare postări -->
-        <form class="d-flex mb-3" action="${pageContext.request.contextPath}/forums/${forum.id}" method="get">
-            <input type="text" name="keyword" class="form-control me-2" placeholder="Caută postări" />
+        <form class="d-flex mb-3"
+              action="${pageContext.request.contextPath}/forums/${forum.id}"
+              method="get">
+            <input type="text" name="keyword"
+                   class="form-control me-2" placeholder="Caută postări" />
             <button type="submit" class="btn btn-primary">Filtrează</button>
         </form>
 
         <ul class="list-group">
             <c:forEach var="post" items="${posts}">
                 <li class="list-group-item">
-                    <strong>${post.title}</strong>
-                    <br/>
+                    <strong>${post.title}</strong><br/>
                     <c:out value="${post.content}" escapeXml="false" />
 
-                    <!-- Linkuri de acțiune -->
+                    <!-- Reacții -->
                     <div class="mt-2">
-                        <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit"
-                           class="btn btn-sm btn-outline-warning me-2">
-                            <i class="bi bi-pencil-square"></i> Edit Post
-                        </a>
-                        <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/delete"
-                           class="btn btn-sm btn-outline-danger"
-                           onclick="return confirm('Ești sigur că vrei să ștergi postarea?');">
-                            <i class="bi bi-trash"></i> Șterge
-                        </a>
+                        <strong>Reacții:</strong>
+
+                        <c:set var="likeCount" value="0" />
+                        <c:set var="loveCount" value="0" />
+                        <c:set var="sadCount" value="0" />
+
+                        <c:forEach var="reaction" items="${post.reactions}">
+                            <c:choose>
+                                <c:when test="${reaction.type == 'LIKE'}">
+                                    <c:set var="likeCount" value="${likeCount + 1}" />
+                                </c:when>
+                                <c:when test="${reaction.type == 'LOVE'}">
+                                    <c:set var="loveCount" value="${loveCount + 1}" />
+                                </c:when>
+                                <c:when test="${reaction.type == 'SAD'}">
+                                    <c:set var="sadCount" value="${sadCount + 1}" />
+                                </c:when>
+                            </c:choose>
+                        </c:forEach>
+
+                        <span class="me-2">👍 ${likeCount}</span>
+                        <span class="me-2">❤️ ${loveCount}</span>
+                        <span>😢 ${sadCount}</span>
+                    </div>
+
+                    <!-- Butoane de reacție -->
+                    <div class="mt-2">
+                        <form action="${pageContext.request.contextPath}/posts/${post.id}/react" method="post" class="d-inline">
+                            <input type="hidden" name="type" value="LIKE" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary me-1">👍</button>
+                        </form>
+                        <form action="${pageContext.request.contextPath}/posts/${post.id}/react" method="post" class="d-inline">
+                            <input type="hidden" name="type" value="LOVE" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger me-1">❤️</button>
+                        </form>
+                        <form action="${pageContext.request.contextPath}/posts/${post.id}/react" method="post" class="d-inline">
+                            <input type="hidden" name="type" value="SAD" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">😢</button>
+                        </form>
+                    </div>
+
+                    <!-- Comentarii -->
+                    <div class="mt-4 ms-3">
+                        <h6>Comentarii:</h6>
+
+                        <ul class="list-group mb-2">
+                            <c:forEach var="comment" items="${post.comments}">
+                                <li class="list-group-item">
+                                    <strong>${comment.author.username}</strong> a spus:
+                                    <p>${comment.content}</p>
+                                    <c:if test="${comment.author.id == sessionScope.currentUser.id or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
+                                        <form action="${pageContext.request.contextPath}/posts/${post.id}/comments/${comment.id}/edit" method="get" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning me-1">Editează</button>
+                                        </form>
+                                        <form action="${pageContext.request.contextPath}/posts/${post.id}/comments/${comment.id}/delete" method="post" class="d-inline"
+                                              onsubmit="return confirm('Ești sigur că vrei să ștergi acest comentariu?');">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Șterge</button>
+                                        </form>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
+                            <c:if test="${empty post.comments}">
+                                <li class="list-group-item text-muted">Niciun comentariu.</li>
+                            </c:if>
+                        </ul>
+
+                        <!-- Formular comentariu nou -->
+                        <c:if test="${not empty sessionScope.currentUser}">
+                            <form class="d-flex align-items-start gap-2 mt-2"
+                                  action="${pageContext.request.contextPath}/posts/${post.id}/comments"
+                                  method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <textarea name="content" class="form-control" rows="2" placeholder="Scrie un comentariu..." required></textarea>
+                                <button type="submit" class="btn btn-primary">Comentează</button>
+                            </form>
+                        </c:if>
+                    </div>
+
+                    <!-- Edit/Delete -->
+                    <div class="mt-3">
+                        <c:if test="${post.author.id == sessionScope.currentUser.id
+                                    or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
+                            <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit" class="btn btn-sm btn-outline-warning me-2">
+                                <i class="bi bi-pencil-square"></i> Edit Post
+                            </a>
+                            <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/delete"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Ești sigur că vrei să ștergi postarea?');">
+                                <i class="bi bi-trash"></i> Șterge
+                            </a>
+                        </c:if>
                     </div>
                 </li>
             </c:forEach>
         </ul>
 
         <div class="mt-3">
-            <a href="${pageContext.request.contextPath}/forums/${forum.id}/posts/create"
-               class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Adaugă o nouă postare
-            </a>
+            <form action="${pageContext.request.contextPath}/forums/${forum.id}/posts/create" method="get">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Adaugă o nouă postare
+                </button>
+            </form>
         </div>
 
         <hr/>
+        <!-- Butoane Edit/Delete forum -->
         <div class="d-flex gap-2">
             <a href="${pageContext.request.contextPath}/forums"
                class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Înapoi la lista forumuri
             </a>
-            <a href="${pageContext.request.contextPath}/forums/${forum.id}/edit"
-               class="btn btn-outline-info">
-                <i class="bi bi-pencil"></i> Edit Forum
-            </a>
-            <a href="${pageContext.request.contextPath}/forums/${forum.id}/delete"
-               class="btn btn-outline-danger"
-               onclick="return confirm('Ești sigur că vrei să ștergi acest forum?')">
-                <i class="bi bi-x-circle"></i> Șterge forum
-            </a>
+            <c:if test="${forum.author.id == sessionScope.currentUser.id
+                        or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
+                <a href="${pageContext.request.contextPath}/forums/${forum.id}/edit"
+                   class="btn btn-outline-info">
+                    <i class="bi bi-pencil"></i> Edit Forum
+                </a>
+                <a href="${pageContext.request.contextPath}/forums/${forum.id}/delete"
+                   class="btn btn-outline-danger"
+                   onclick="return confirm('Ești sigur că vrei să ștergi acest forum?')">
+                    <i class="bi bi-x-circle"></i> Șterge forum
+                </a>
+            </c:if>
         </div>
 
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Ho1s9FlcwIyHfJO23mO4IECEq29gcNeLVU9wtBfKcvQf0yIfzBi6vM2kl1imU81u"
-        crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

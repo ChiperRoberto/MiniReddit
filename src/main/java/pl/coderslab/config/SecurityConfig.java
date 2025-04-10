@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import pl.coderslab.config.CustomAuthSuccessHandler;
 import pl.coderslab.entity.User;
 import pl.coderslab.repository.UserRepository;
 
@@ -44,19 +45,31 @@ public class SecurityConfig {
 
     // 3) SecurityFilterChain
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           CustomAuthSuccessHandler successHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         // Permităm forward-uri interne
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         // Permităm accesul la /login, /register, /css, /js, /images etc.
-//                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+//                        .requestMatchers("/**").permitAll()
                         // Apoi orice alt request trebuie să fie autentificat
                         .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/posts/*/comments/add-ajax",
+                                "/forums/*/posts/create",
+                                "/user/update-description",
+                                "/logout",
+                                "posts/*/react",
+                                "forums/*/edit"// <- corect acum
+                        )
+                )
                 .formLogin(form -> form
                         .loginPage("/login")      // definim pagina custom de login
+                        .successHandler(successHandler) // la login reușit, se apelează handler-ul
                         .defaultSuccessUrl("/forums", true) // după login reușit
                         .permitAll()
                 )

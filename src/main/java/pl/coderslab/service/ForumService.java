@@ -2,6 +2,7 @@ package pl.coderslab.service;
 
 import org.springframework.stereotype.Service;
 import pl.coderslab.entity.Forum;
+import pl.coderslab.entity.User;
 import pl.coderslab.repository.ForumRepository;
 
 import java.util.List;
@@ -29,6 +30,10 @@ public class ForumService {
 
     public Forum getForumById(Long id) {
         return forumRepository.findById(id).orElse(null);
+    }
+
+    public List<Forum> findByAuthorId(User author) {
+        return forumRepository.findByAuthor(author);
     }
 
     public List<Forum> getAllForums() {
