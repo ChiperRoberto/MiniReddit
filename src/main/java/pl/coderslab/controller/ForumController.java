@@ -22,6 +22,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/forums")
@@ -310,7 +311,6 @@ public class ForumController {
         return "redirect:/forums/" + forumId;
     }
 
-    // Upload imagine Quill
     @PostMapping("{forumId}/upload")
     @ResponseBody
     public Map<String, String> handleImageUpload(@RequestParam("file") MultipartFile file,
@@ -321,16 +321,27 @@ public class ForumController {
         }
 
         try {
-            String originalFilename = file.getOriginalFilename();
-            if (originalFilename == null || originalFilename.isEmpty()) {
-                throw new RuntimeException("Numele fișierului este gol!");
+            if (file.isEmpty()) {
+                throw new RuntimeException("Fișierul este gol!");
             }
-            Path path = Paths.get("uploads/" + originalFilename);
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-            // resourceHandler la /uploads/**
-            String fileUrl = "/uploads/" + originalFilename;
+            if (!file.getContentType().startsWith("image/")) {
+                throw new RuntimeException("Fișierul nu este o imagine validă!");
+            }
 
+            Path uploadDir = Paths.get("uploads");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String uniqueFilename = UUID.randomUUID() + extension;
+            Path filePath = uploadDir.resolve(uniqueFilename);
+
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            String fileUrl = "/uploads/" + uniqueFilename;
             Map<String, String> response = new HashMap<>();
             response.put("url", fileUrl);
             return response;

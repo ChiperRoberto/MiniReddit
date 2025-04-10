@@ -107,7 +107,7 @@
             formData.append('file', file);
 
             try {
-                const response = await fetch('${pageContext.request.contextPath}/forums/${forum.id}/upload', {
+                const response = await fetch('${pageContext.request.contextPath}/forums/' + ${post.forum.id} + '/upload', {
                     method: 'POST',
                     body: formData
                 });
