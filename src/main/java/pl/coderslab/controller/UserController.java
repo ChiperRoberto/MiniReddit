@@ -3,13 +3,13 @@ package pl.coderslab.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import pl.coderslab.entity.Forum;
 import pl.coderslab.entity.User;
 import pl.coderslab.repository.ForumRepository;
 import pl.coderslab.repository.UserRepository;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -37,5 +37,16 @@ public class UserController {
         user.setDetails(description);
         userRepo.save(user);
         return "redirect:/user/profile";
+    }
+
+    @ModelAttribute("user")
+    public User getCurrentUser(Authentication auth) {
+        return userRepo.findByUsername(auth.getName());
+    }
+
+    @ModelAttribute("forums")
+    public List<Forum> getUserForums(Authentication auth) {
+        User user = userRepo.findByUsername(auth.getName());
+        return forumRepo.findByAuthor(user);
     }
 }

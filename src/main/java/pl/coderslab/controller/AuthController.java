@@ -11,4 +11,9 @@ public class AuthController {
         // returnează "login.jsp" (sau .html) din /WEB-INF/views/
         return "login";
     }
+
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/login?logout"; // opțional: mesaj de logout
+    }
 }

@@ -52,15 +52,19 @@ public class SecurityConfig {
                         // Permităm forward-uri interne
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         // Permităm accesul la /login, /register, /css, /js, /images etc.
-//                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+//                        .requestMatchers("/**").permitAll()
                         // Apoi orice alt request trebuie să fie autentificat
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(
                                 "/posts/*/comments/add-ajax",
-                                "/forums/*/posts/create"  // <- corect acum
+                                "/forums/*/posts/create",
+                                "/user/update-description",
+                                "/logout",
+                                "posts/*/react",
+                                "forums/*/edit"// <- corect acum
                         )
                 )
                 .formLogin(form -> form

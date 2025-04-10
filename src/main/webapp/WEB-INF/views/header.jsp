@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <!-- Font + Bootstrap CSS -->
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
 
@@ -16,7 +16,7 @@
         .navbar {
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: sticky; top: 0; z-index: 1000;
-            background-color: lightblue ;
+            background-color: lightblue;
             background-size: cover;
             background-position: center;
             border-radius: 0 0 2rem 2rem;
@@ -76,10 +76,34 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
     <div class="container">
-        <!-- Schimbă textul Bubbles cu Forumuri, dacă vrei -->
-        <a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}/forums">
-            <span style="font-weight: bold; font-size: 1.5rem;">Forumuri</span>
+        <a class="navbar-brand fw-bold fs-4" href="${pageContext.request.contextPath}/forums">
+            Forumuri
         </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <sec:authorize access="isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/user/profile">
+                            <i class="bi bi-person-circle"></i> Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="${pageContext.request.contextPath}/logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-link nav-link" style="padding: 0; text-decoration: none;">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                </sec:authorize>
+                <sec:authorize access="!isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/login">
+                            <i class="bi bi-box-arrow-in-right"></i> Autentificare
+                        </a>
+                    </li>
+                </sec:authorize>
+            </ul>
+        </div>
     </div>
 </nav>
 </body>
