@@ -1,8 +1,10 @@
 package pl.coderslab.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.entity.User;
 import pl.coderslab.service.UserService;
@@ -21,8 +23,12 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String processRegistration(@ModelAttribute("user") User user,
+    public String processRegistration(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
                                       Model model) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+
         try {
             userService.registerNewUserAccount(user);
         } catch (IllegalArgumentException e) {

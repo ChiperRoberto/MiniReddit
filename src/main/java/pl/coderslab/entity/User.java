@@ -3,6 +3,7 @@ package pl.coderslab.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.Optional;
 
@@ -13,16 +14,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // exemplu de nume de coloană, în general nu e obligatoriu dacă e identic cu atributul
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message = "Username-ul nu poate fi gol.")
+    @Size(min = 3, max = 30, message = "Username-ul trebuie să aibă între 3 și 30 de caractere.")
     private String username;
 
     @Column(nullable = false, unique = true)
-    @Email
+    @NotBlank(message = "Emailul nu poate fi gol.")
+    @Email(message = "Emailul nu este valid.")
     private String email;
 
     @Column(nullable = false)
+    @NotBlank(message = "Parola nu poate fi goală.")
+    @Size(min = 6, message = "Parola trebuie să aibă cel puțin 6 caractere.")
     private String password;
 
     // Adăugăm un câmp pentru detalii utilizator

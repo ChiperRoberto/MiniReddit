@@ -46,30 +46,32 @@
     <div class="bubble-card">
         <h1 class="bubble-title mb-4">Creează Postare</h1>
 
-        <!-- Formularul pentru salvarea unei postări (title + content) -->
         <form id="postForm"
               action="${pageContext.request.contextPath}/forums/${post.forum.id}/posts/create"
               method="post">
 
             <div class="mb-3">
                 <label for="title" class="form-label">Titlu Postare:</label>
-                <input type="text" id="title" name="title" class="form-control" />
+                <input type="text" id="title" name="title" class="form-control" value="${post.title}" />
+                <c:if test="${bindingResult.hasFieldErrors('title')}">
+                    <div class="text-danger">${bindingResult.getFieldError('title').defaultMessage}</div>
+                </c:if>
             </div>
 
             <div class="mb-3">
                 <label for="editor" class="form-label">Conținut:</label>
-                <!-- Editor Quill -->
-                <div id="editor"></div>
-                <!-- Textarea ascunsă unde vom pune HTML-ul din Quill -->
+                <div id="editor">${post.content}</div>
                 <textarea name="content" id="content" hidden></textarea>
+                <c:if test="${bindingResult.hasFieldErrors('content')}">
+                    <div class="text-danger">${bindingResult.getFieldError('content').defaultMessage}</div>
+                </c:if>
             </div>
 
             <button type="submit" class="btn btn-primary">Salvează Postarea</button>
         </form>
 
         <hr/>
-        <a href="${pageContext.request.contextPath}/forums/${post.forum.id}"
-           class="btn btn-outline-secondary">
+        <a href="${pageContext.request.contextPath}/forums/${post.forum.id}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Înapoi la Forum
         </a>
     </div>

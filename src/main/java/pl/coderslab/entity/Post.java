@@ -1,6 +1,9 @@
 package pl.coderslab.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,10 +15,12 @@ public class Post {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Titlul postării este obligatoriu.")
+    @Size(min = 5, max = 150, message = "Titlul trebuie să aibă între 5 și 150 caractere.")
     private String title;
 
-    // Poate fi util să stocăm text de lungime mare:
     @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Conținutul postării nu poate fi gol.")
     private String content;
 
     @Column(name = "created_at", updatable = false)

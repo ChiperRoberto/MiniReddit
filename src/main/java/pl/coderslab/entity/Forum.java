@@ -2,6 +2,9 @@ package pl.coderslab.entity;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 @Entity
@@ -12,6 +15,8 @@ public class Forum {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Numele forumului este obligatoriu.")
+    @Size(min = 3, max = 100, message = "Numele trebuie să aibă între 3 și 100 caractere.")
     private String name;
 
     // Autorul forumului

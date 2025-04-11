@@ -1,10 +1,12 @@
 package pl.coderslab.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.coderslab.entity.Forum;
@@ -62,9 +64,18 @@ public class ForumController {
      * /forums/create
      */
     @GetMapping("/create")
-    public String showCreateForumForm(Model model) {
-        model.addAttribute("forum", new Forum());
-        return "forum-create";
+    public String createForum(@ModelAttribute("forum") @Valid Forum forum,
+                              BindingResult result,
+                              @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal) {
+        if (result.hasErrors()) {
+            return "forum-create";
+        }
+
+        User dbUser = userRepository.findByUsername(principal.getUsername());
+        forum.setAuthor(dbUser);
+        forumService.createForum(forum);
+
+        return "redirect:/forums";
     }
 
     /**

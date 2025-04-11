@@ -1,6 +1,8 @@
 package pl.coderslab.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +19,7 @@ public class Comment {
     private User author;
 
     @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Comentariul nu poate fi gol.")
     private String content;
 
     private LocalDateTime createdAt;

@@ -43,7 +43,10 @@
         <form action="${pageContext.request.contextPath}/forums/create" method="post">
             <div class="mb-3">
                 <label for="name" class="form-label">Nume Forum:</label>
-                <input type="text" id="name" name="name" class="form-control" />
+                <input type="text" id="name" name="name" class="form-control" value="${forum.name}" />
+                <c:if test="${bindingResult.hasFieldErrors('name')}">
+                    <div class="text-danger">${bindingResult.getFieldError('name').defaultMessage}</div>
+                </c:if>
             </div>
 
             <button type="submit" class="btn btn-primary">Salvează Forum</button>
