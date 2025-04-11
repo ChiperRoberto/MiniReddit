@@ -60,8 +60,6 @@ mvn spring-boot:run
 
 ## 📸 Capturi de ecran
 
-> Aici poți introduce capturile de ecran salvate. De exemplu:
-
 ![Login Page](./imagini_README/LoginPage.png)
 ![Register Page](./imagini_README/Register.png)
 ![Profile Page](./imagini_README/ProfilePage.png)
