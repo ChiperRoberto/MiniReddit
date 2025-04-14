@@ -5,28 +5,19 @@
 <head>
     <title>Editare Postare</title>
 
-    <!-- Quill CSS + JS -->
+    <!-- Quill CSS -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    <!-- Bootstrap CSS -->
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-            integrity="sha384-CTd3/yCOZhVVkTQ+nCyk3z9Hra6Hc6wWY6Xfq6wA91gz7zUmD2cBfyqegH6ckEdT"
-            crossorigin="anonymous"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
+    <!-- Bootstrap CSS + Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
 
     <style>
         body {
             background-color: #eaf6ff;
         }
         .bubble-card {
-            background-color: #ffffff;
+            background-color: #fff;
             border-radius: 2rem;
             padding: 2rem;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -34,52 +25,46 @@
         .bubble-title {
             font-family: "Fredoka", sans-serif;
         }
+        #editor {
+            background-color: white;
+            min-height: 200px;
+        }
     </style>
 </head>
 <body>
-
 
 <div class="container">
     <div class="bubble-card">
         <h1 class="bubble-title mb-4">Editare Postare</h1>
 
-        <!-- Notă: aici încă folosim un <textarea> simplu.
-             Dacă vrei Quill și la editare, e ceva mai complex (ar trebui să initializezi Quill cu content-ul existent).
-        -->
-        <form action="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit"
+        <form id="postForm"
+              action="${pageContext.request.contextPath}/forums/${forum.id}/posts/${post.id}/edit"
               method="post">
 
+            <!-- Titlu -->
             <div class="mb-3">
                 <label for="title" class="form-label">Titlu:</label>
-                <input type="text" id="title" name="title" value="${post.title}" class="form-control" />
+                <input type="text" id="title" name="title"
+                       value="${post.title}" required minlength="5" maxlength="150"
+                       class="form-control" />
             </div>
 
-            <!-- Înlocuiește textarea-ul clasic -->
+            <!-- Conținut -->
             <div class="mb-3">
                 <label for="editor" class="form-label">Conținut:</label>
-                <div id="editor">${post.content}</div>
+                <div id="editor"><c:out value="${post.content}" escapeXml="false"/></div>
                 <textarea name="content" id="content" hidden></textarea>
+                <noscript>
+                    <div class="alert alert-warning mt-2">
+                        JavaScript este dezactivat. Editorul nu va funcționa corect.
+                    </div>
+                </noscript>
             </div>
 
-            <script>
-                var quill = new Quill('#editor', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            [{ 'header': [1, 2, false] }],
-                            ['bold', 'italic', 'underline'],
-                            ['image', 'code-block']
-                        ]
-                    }
-                });
-
-                document.querySelector('form').addEventListener('submit', function () {
-                    var html = quill.root.innerHTML;
-                    document.getElementById('content').value = html;
-                });
-            </script>
-
-            <button type="submit" class="btn btn-primary">Salvează modificările</button>
+            <!-- Buton submit -->
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Salvează modificările
+            </button>
         </form>
 
         <hr/>
@@ -89,13 +74,36 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Ho1s9FlcwIyHfJO23mO4IECEq29gcNeLVU9wtBfKcvQf0yIfzBi6vM2kl1imU81u"
-        crossorigin="anonymous"
-></script>
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script care transferă conținutul Quill în textarea -->
+<script>
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline'],
+                ['link', 'image', 'code-block']
+            ]
+        }
+    });
+
+    document.getElementById('postForm').addEventListener('submit', function () {
+        const html = quill.root.innerHTML.trim();
+        document.getElementById('content').value = html;
+
+        // Validare rapidă (evită trimiteri cu conținut gol)
+        if (html === '' || html === '<p><br></p>') {
+            alert('Conținutul postării nu poate fi gol!');
+            event.preventDefault();
+        }
+    });
+</script>
 
 </body>
 </html>

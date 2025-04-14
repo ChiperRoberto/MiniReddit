@@ -298,29 +298,33 @@ public class ForumController {
     @PostMapping("/{forumId}/posts/{postId}/edit")
     public String editPost(@PathVariable Long forumId,
                            @PathVariable Long postId,
-                           @ModelAttribute("post") Post updatedPost,
-                           @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal) {
+                           @Valid @ModelAttribute("post") Post updatedPost,
+                           BindingResult result,
+                           @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+                           Model model) {
 
         Forum forum = forumService.getForumById(forumId);
-        if (forum == null) {
-            return "redirect:/forums";
-        }
-        Post dbPost = postService.getPostById(postId);
-        if (dbPost == null) {
-            return "redirect:/forums/" + forumId;
-        }
+        if (forum == null) return "redirect:/forums";
 
-        // Verificăm autor post
+        Post dbPost = postService.getPostById(postId);
+        if (dbPost == null) return "redirect:/forums/" + forumId;
+
         if (!canEditPost(dbPost, principal)) {
             throw new AccessDeniedException("Nu ai dreptul să editezi această postare!");
         }
 
+        if (result.hasErrors()) {
+            model.addAttribute("forum", forum);
+            return "redirect:/forums/" + forumId + "/posts/" + postId + "/edit";
+        }
+
         dbPost.setTitle(updatedPost.getTitle());
         dbPost.setContent(updatedPost.getContent());
-        postService.updatePost(dbPost);
 
+        postService.updatePost(dbPost);
         return "redirect:/forums/" + forumId;
     }
+
 
     @PostMapping("{forumId}/upload")
     @ResponseBody
