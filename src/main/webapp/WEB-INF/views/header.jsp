@@ -18,6 +18,7 @@
         }
         body {
             background-color: #fff5f0;
+            <%--background-image: url('${pageContext.request.contextPath}/images/background.png');--%>
             font-family: Arial, sans-serif;
             animation: backgroundFloat 10s ease-in-out infinite alternate;
         }
