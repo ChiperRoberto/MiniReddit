@@ -1,4 +1,4 @@
-# miniReddit 🧵
+# MiniReddit 🧵
 
 - MiniReddit este o aplicație web simplificată de tip forum, dezvoltată cu Java, Spring Boot, Hibernate și JSP. Aceasta simulează funcționalitățile de bază ale unei platforme de discuții precum Reddit.
 ---
