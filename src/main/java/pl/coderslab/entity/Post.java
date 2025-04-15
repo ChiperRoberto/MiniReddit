@@ -16,7 +16,7 @@ public class Post {
 
     @Column(nullable = false)
     @NotBlank(message = "Titlul postării este obligatoriu.")
-    @Size(min = 5, max = 150, message = "Titlul trebuie să aibă între 5 și 150 caractere.")
+    @Size(min = 4, max = 150, message = "Titlul trebuie să aibă între 5 și 150 caractere.")
     private String title;
 
     @Column(columnDefinition = "TEXT")

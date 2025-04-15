@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="header.jsp" %>
+
 <html>
 <head>
     <title>Detalii Forum</title>
@@ -16,26 +17,57 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
 
+    <!-- Highlight.js pentru syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai-sublime.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
     <style>
         body {
-            background-color: #eaf6ff;
+            background-color: #fff5f0;
+            font-family: Arial, sans-serif;
+            animation: backgroundFloat 10s ease-in-out infinite alternate;
         }
         .bubble-card {
             background-color: #ffffff;
             border-radius: 2rem;
             padding: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.08); /* roșu-portocaliu subtil */
         }
         .bubble-title {
-            font-family: "Fredoka", sans-serif;
+            font-weight: bold;
+            animation: popIn 0.7s ease;
+            color: #ff4500;
+        }
+        .btn-primary {
+            background-color: #ff4500;
+            border-color: #ff4500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff5722;
+            border-color: #ff5722;
+            transform: scale(1.05);
         }
     </style>
+    <style>
+        .ql-snow .ql-editor pre {
+            background-color: #f3f3f3;
+            color: #333;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: "Courier New", monospace;
+            overflow-x: auto;
+        }
+    </style>
+
 </head>
 <body>
 
 <div class="container">
     <div class="bubble-card">
-        <h1 class="bubble-title">Detalii Forum</h1>
+        <h1 class="bubble-title mb-4">Detalii Forum</h1>
         <h5 class="text-secondary">ID: ${forum.id}</h5>
         <p class="fs-4"><strong>Nume forum:</strong> ${forum.name}</p>
 
@@ -56,7 +88,10 @@
             <c:forEach var="post" items="${posts}">
                 <li class="list-group-item">
                     <strong>${post.title}</strong><br/>
-                    <c:out value="${post.content}" escapeXml="false" />
+                    <!-- Conținutul postării este afișat într-un container ql-editor -->
+                    <div class="ql-editor">
+                        <c:out value="${post.content}" escapeXml="false" />
+                    </div>
 
                     <!-- Reacții -->
                     <div class="mt-2">
@@ -139,7 +174,7 @@
                         </c:if>
                     </div>
 
-                    <!-- Edit/Delete -->
+                    <!-- Butoane Edit/Delete Post -->
                     <div class="mt-3">
                         <c:if test="${post.author.id == sessionScope.currentUser.id
                                     or sessionScope.currentUser.role eq 'ROLE_ADMIN'}">
@@ -167,7 +202,7 @@
         </div>
 
         <hr/>
-        <!-- Butoane Edit/Delete forum -->
+        <!-- Butoane Edit/Delete Forum -->
         <div class="d-flex gap-2">
             <a href="${pageContext.request.contextPath}/forums"
                class="btn btn-outline-secondary">
@@ -190,6 +225,17 @@
     </div>
 </div>
 
+<!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+<!-- Inițializează Highlight.js pentru blocurile de cod -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('pre.ql-syntax').forEach((block) => {
+            hljs.highlightElement(block);
+        });
+    });
+</script>
+
 </body>
 </html>

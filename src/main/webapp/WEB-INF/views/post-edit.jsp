@@ -14,21 +14,32 @@
 
     <style>
         body {
-            background-color: #eaf6ff;
+            background-color: #fff5f0;
+            font-family: Arial, sans-serif;
+            animation: backgroundFloat 10s ease-in-out infinite alternate;
         }
         .bubble-card {
-            background-color: #fff;
+            background-color: #ffffff;
             border-radius: 2rem;
             padding: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.08); /* roșu-portocaliu subtil */
         }
         .bubble-title {
-            font-family: "Fredoka", sans-serif;
+            font-weight: bold;
+            animation: popIn 0.7s ease;
+            color: #ff4500;
         }
-        #editor {
-            background-color: white;
-            min-height: 200px;
+        .btn-primary {
+            background-color: #ff4500;
+            border-color: #ff4500;
+            transition: transform 0.2s ease;
         }
+
+        .btn-primary:hover {
+            background-color: #ff5722;
+            border-color: #ff5722;
+            transform: scale(1.05);
+        }*/
     </style>
 </head>
 <body>
@@ -94,9 +105,9 @@
     });
 
     document.getElementById('postForm').addEventListener('submit', function () {
+        const css = quill.root.styleSheets;
         const html = quill.root.innerHTML.trim();
         document.getElementById('content').value = html;
-
         // Validare rapidă (evită trimiteri cu conținut gol)
         if (html === '' || html === '<p><br></p>') {
             alert('Conținutul postării nu poate fi gol!');

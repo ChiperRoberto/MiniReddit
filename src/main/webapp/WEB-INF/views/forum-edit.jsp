@@ -21,18 +21,33 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
     <style>
-        body {
-            background-color: #eaf6ff;
+        /*body {
+            background-color: #fff5f0;
+            font-family: Arial, sans-serif;
+            animation: backgroundFloat 10s ease-in-out infinite alternate;
         }
         .bubble-card {
             background-color: #ffffff;
             border-radius: 2rem;
             padding: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.08); /* roșu-portocaliu subtil */
         }
         .bubble-title {
-            font-family: "Fredoka", sans-serif;
+            font-weight: bold;
+            animation: popIn 0.7s ease;
+            color: #ff4500;
         }
+        .btn-primary {
+            background-color: #ff4500;
+            border-color: #ff4500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff5722;
+            border-color: #ff5722;
+            transform: scale(1.05);
+        }*/
     </style>
 </head>
 <body>

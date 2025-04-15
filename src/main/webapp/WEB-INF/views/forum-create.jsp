@@ -20,18 +20,18 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
     <style>
-        body {
-            background-color: #eaf6ff;
-        }
-        .bubble-card {
-            background-color: #ffffff;
-            border-radius: 2rem;
-            padding: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .bubble-title {
-            font-family: "Fredoka", sans-serif;
-        }
+        /*body {*/
+        /*    background-color: #eaf6ff;*/
+        /*}*/
+        /*.bubble-card {*/
+        /*    background-color: #ffffff;*/
+        /*    border-radius: 2rem;*/
+        /*    padding: 2rem;*/
+        /*    box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+        /*}*/
+        /*.bubble-title {*/
+        /*    font-family: "Fredoka", sans-serif;*/
+        /*}*/
     </style>
 </head>
 <body>

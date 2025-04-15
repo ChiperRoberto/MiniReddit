@@ -22,22 +22,22 @@
     />
 
     <style>
-        body {
-            background-color: #eaf6ff;
-        }
-        .bubble-card {
-            background-color: #ffffff;
-            border-radius: 2rem;
-            padding: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .bubble-title {
-            font-family: "Fredoka", sans-serif;
-        }
-        #editor {
-            height: 200px;
-            background: #fff;
-        }
+        /*body {*/
+        /*    background-color: #eaf6ff;*/
+        /*}*/
+        /*.bubble-card {*/
+        /*    background-color: #ffffff;*/
+        /*    border-radius: 2rem;*/
+        /*    padding: 2rem;*/
+        /*    box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+        /*}*/
+        /*.bubble-title {*/
+        /*    font-family: "Fredoka", sans-serif;*/
+        /*}*/
+        /*#editor {*/
+        /*    height: 200px;*/
+        /*    background: #fff;*/
+        /*}*/
     </style>
 </head>
 <body>
